@@ -14,7 +14,7 @@ CFLAGS	 = -std=c++17 $(OPT_FLAGS) -pedantic -Wall -Wextra -Wno-unused-parameter 
 BINFILE  = bin/$(NAME).bin
 
 # path to RocksDB source
-ROCKSPATH	 = $(PWD)/../deps/rocksdb
+ROCKSPATH	 = /usr
 
 # ROCKSLIB = -lrocksdb -lpthread -lrt -lsnappy -lgflags -lz -lbz2 -lzstd -lbz2 -llz4
 ROCKSLIB = -lrocksdb -lpthread -lsnappy -lz -lzstd -lbz2 -llz4 -ldl
@@ -29,6 +29,7 @@ LEVENTL	 = $(LEVENTPATH)/.libs
 INCLUDES   = -I. -I"$(ROCKSPATH)/include" \
              -I"$(LEVENTPATH)/include"
 
+LIBRARIES  = -L"$(ROCKSPATH)/lib"
 
 CP = cp -f
 CPR = cp -fR
@@ -180,29 +181,29 @@ bin/obj/change_files_limit.rs.o bin/obj/version.rs.o
 
 
 bin/restore.bin: bin/obj/restore.o
-	$(CC) bin/obj/restore.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/restore.bin
+	$(CC) bin/obj/restore.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) -o bin/restore.bin
 	strip --strip-all bin/restore.bin
 
 bin/restore_hr.bin: bin/obj/restore_hr.o
-	$(CC) bin/obj/restore_hr.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/restore_hr.bin
+	$(CC) bin/obj/restore_hr.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) -o bin/restore_hr.bin
 	strip --strip-all bin/restore_hr.bin
 
 bin/human_readable.bin: bin/obj/human_readable.o
-	$(CC) bin/obj/human_readable.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/human_readable.bin
+	$(CC) bin/obj/human_readable.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) -o bin/human_readable.bin
 	strip --strip-all bin/human_readable.bin
 
 bin/human_readable_batches.bin: bin/obj/human_readable_batches.o
-	$(CC) bin/obj/human_readable_batches.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/human_readable_batches.bin
+	$(CC) bin/obj/human_readable_batches.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) -o bin/human_readable_batches.bin
 	strip --strip-all bin/human_readable_batches.bin
 
 bin/rows_number.bin: bin/obj/rows_number.o
-	$(CC) bin/obj/rows_number.o $(CFLAGS) -L$(ROCKSPATH) $(ROCKSLIB) -o bin/rows_number.bin
+	$(CC) bin/obj/rows_number.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) -o bin/rows_number.bin
 	strip --strip-all bin/rows_number.bin
 
 
 #dynamic:
 ${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin bin/human_readable_batches.bin bin/rows_number.bin
-	$(CC) bin/obj/*.rs.o $(CFLAGS) -levent -ldl -L$(ROCKSPATH) -L$(LEVENTL) $(ROCKSLIB) -rdynamic -o ${BINFILE}
+	$(CC) bin/obj/*.rs.o $(CFLAGS) -levent -ldl $(LIBRARIES) -L$(LEVENTL) $(ROCKSLIB) -rdynamic -o ${BINFILE}
 	strip --strip-all ${BINFILE}
 	@echo
 	@echo "\033[1;36mBuild complite \033[0m"
@@ -211,7 +212,7 @@ ${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin bin/hu
 
 .PHONY: static
 static: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin bin/human_readable_batches.bin bin/rows_number.bin
-	$(CC) bin/obj/*.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl -L$(ROCKSPATH) $(ROCKSLIB) -rdynamic -o ${BINFILE}
+	$(CC) bin/obj/*.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl $(LIBRARIES) $(ROCKSLIB) -rdynamic -o ${BINFILE}
 	strip --strip-all ${BINFILE}
 	@echo
 	@echo "\033[1;34mBuild complite \033[0m"
