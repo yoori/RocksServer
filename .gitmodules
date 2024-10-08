@@ -1,5 +1,5 @@
 [submodule "rocksdb"]
 	path = deps/rocksdb
 	url = https://github.com/facebook/rocksdb
-	branch = 6.29.fb
+	branch = 9.7.fb
 
