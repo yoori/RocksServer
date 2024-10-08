@@ -4,17 +4,6 @@
 cd $(dirname $0)
 
 #
-# compile libevent
-#
-cd libevent
-./autogen.sh
-./configure
-# make clean
-make -j$(nproc) 
-#make verify
-
-
-#
 # compile rocksdb
 #
 cd ../rocksdb
