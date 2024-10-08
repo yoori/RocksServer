@@ -2,8 +2,4 @@
 	path = deps/rocksdb
 	url = https://github.com/facebook/rocksdb
 	branch = 6.29.fb
-[submodule "libevent"]
-	path = deps/libevent
-	url = https://github.com/libevent/libevent
-	branch = release-2.1.8-stable
 
