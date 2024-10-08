@@ -6,10 +6,11 @@ cd $(dirname $0)
 #
 # compile rocksdb
 #
-cd ../rocksdb
+pushd rocksdb
 export LUA_PATH=
 export LUA_INCLUDE=
 # make clean
 make static_lib -j$(nproc)
 #make shared_lib
 # make check
+popd
