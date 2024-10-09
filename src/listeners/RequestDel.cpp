@@ -19,7 +19,7 @@ namespace RocksServer {
     void RequestDel::run(const ProtocolInGet &in, const ProtocolOut &out) noexcept
     {
         // Detect if current method is POST
-        if( !in.check(out) ) {
+        if( !in.check() ) {
             return;
         }
         
