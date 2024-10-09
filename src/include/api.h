@@ -36,7 +36,7 @@
 #include <rocksserver/rocksdb/rocksdb/version.h>
 #include <rocksserver/rocksdb/rocksdb/write_batch.h>
 #include <rocksserver/rocksdb/rocksdb/merge_operator.h>
-#include <rocksserver/rocksdb/rocksdb/utilities/backupable_db.h>
+//#include <rocksserver/rocksdb/rocksdb/utilities/backupable_db.h>
 
 // RocksDB wrapper
 #include <rocksserver/rocks/Int64Incrementor.h>

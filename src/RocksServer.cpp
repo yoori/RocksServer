@@ -177,7 +177,7 @@ int main(int argc, char **argv)
     //
     // If is data base is backupable
     //
-    rocksdb::BackupableDBOptions bkOptions( cfg.get("backup_path", dfCfg.backup_path) );
+    rocksdb::BackupEngineOptions bkOptions( cfg.get("backup_path", dfCfg.backup_path) );
 
     if(cfg.get("isbackupable", dfCfg.isbackupable)) {
         // If share_table_files == true, backup will assume that table files with

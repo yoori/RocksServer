@@ -10,6 +10,14 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#pragma once
+
+#include <string>
+
+#include "include/evhttp/PostData.h"
+
+#include "rocksdb/slice.h"
+
 namespace RocksServer {
 
     class ProtocolInPostPairsIterator
@@ -30,7 +38,7 @@ namespace RocksServer {
          *  Trivial constructor (for returning in method ProtocolInPostPairs::end())
          */
         ProtocolInPostPairsIterator() :
-            raw(std::move(PostData())),
+            raw(empty_raw),
             lpos(npos)
         {}
 
@@ -123,5 +131,8 @@ namespace RocksServer {
         
         size_type lpos = 0;
         size_type rpos = 0;
+
+    private:
+        static PostData empty_raw;
     };
 }

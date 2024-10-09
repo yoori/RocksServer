@@ -23,6 +23,13 @@ namespace RocksServer {
             resp.add_printf("%lu\n%.*s\n", val.size(), val.size(), val.data());
             return *this;
         }
+
+        const ProtocolOut& setSingleValue(const char *val, int len) const
+        {
+            resp.add(val, len);
+            return *this;
+        }
+
         const ProtocolOut& setValue(const char *val) const
         {
             size_t len = strlen(val);

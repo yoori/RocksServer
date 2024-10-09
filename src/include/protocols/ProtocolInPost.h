@@ -17,7 +17,12 @@ namespace RocksServer {
     class ProtocolInPost
     {
     public:
-        ProtocolInPost(const EvRequest &r) :request(r), raw(request.getPostData()) {}
+        ProtocolInPost(const EvRequest &r) :
+            request(r),
+            raw(request.getPostData()),
+            uri(r.getUri()),
+            pathlen(uri.find('?'))
+        {}
 
         // Check query
         bool check(const ProtocolOut &out) const
@@ -36,34 +41,27 @@ namespace RocksServer {
                 return false;
             }
 
-            return true;
+            return (uri.size()-1 > pathlen);
         }
 
         // retrive key
         rocksdb::Slice key() const
         {
-            return rocksdb::Slice(raw, raw.size());
+            return rocksdb::Slice(uri.data() + pathlen + 1, uri.size() - pathlen - 1);
         }
 
         // retrive key and value
         std::pair<rocksdb::Slice, rocksdb::Slice> pair() const
         {
-            std::string::size_type lpos = 0;
-            std::string::size_type rpos = raw.find('\n');
-            rocksdb::Slice key(raw, rpos);
-            
-            lpos = rpos+1;
-            rpos = raw.find('\n', lpos);
-            auto vallen = std::atoll((const char *)raw + lpos);
-            lpos = rpos+1;
-            rocksdb::Slice value((const char *)raw + lpos, vallen);
-
-            return std::make_pair(key, value);
+            return std::make_pair(key(), rocksdb::Slice(raw, raw.size()));
         }
 
     protected:
         const EvRequest &request;
         const PostData raw;
+        const std::string uri;
+        // length of "/path"
+        const std::string::size_type pathlen;
     };
 
 }

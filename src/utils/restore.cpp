@@ -11,7 +11,6 @@
 
 // RocksDB
 //#include "rocksdb/db.h"
-#include "rocksdb/utilities/backupable_db.h"
 
 // RocksDB wrapper
 #include "include/rocks/BackupEngine.h"

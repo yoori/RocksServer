@@ -29,7 +29,7 @@ namespace RocksServer {
         if(!db.status()) {
             out.setFailValue();
         } else {
-            out.setValue(val);
+            out.setSingleValue(val.data(), val.size());
         }
     }
 

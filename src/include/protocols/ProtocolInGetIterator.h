@@ -10,6 +10,12 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#pragma once
+
+#include <string>
+
+#include "rocksdb/slice.h"
+
 namespace RocksServer {
 
     class ProtocolInGetIterator
@@ -30,7 +36,7 @@ namespace RocksServer {
          *  Trivial constructor (for returning in method ProtocolInGet::end())
          */
         ProtocolInGetIterator() :
-            str(std::move(std::string())),
+            str(empty_string),
             lpos(npos)
         {}
 
@@ -113,6 +119,9 @@ namespace RocksServer {
         // startpos
         size_type lpos;
         size_type rpos = 0;
+
+    private:
+        static std::string empty_string;
     };
 }
 

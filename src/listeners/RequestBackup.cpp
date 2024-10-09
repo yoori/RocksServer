@@ -14,7 +14,7 @@ namespace RocksServer {
 
     RequestBackup::RequestBackup(
         RocksDBWrapper &rdb,
-        const rocksdb::BackupableDBOptions &bkOptions,
+        const rocksdb::BackupEngineOptions &bkOptions,
         uint32_t num_backups,
         bool flush_before_backup
     ) noexcept : 

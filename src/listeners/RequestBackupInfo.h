@@ -16,7 +16,7 @@ namespace RocksServer {
     {
     public:
         
-        RequestBackupInfo(const rocksdb::BackupableDBOptions &bkOptions) noexcept :
+        RequestBackupInfo(const rocksdb::BackupEngineOptions &bkOptions) noexcept :
             bkOptions(bkOptions)
         {}
 
@@ -29,6 +29,6 @@ namespace RocksServer {
 
         virtual ~RequestBackupInfo() = default;
     private:
-        const rocksdb::BackupableDBOptions &bkOptions;
+        const rocksdb::BackupEngineOptions &bkOptions;
     };
 }

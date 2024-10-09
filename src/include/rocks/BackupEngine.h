@@ -9,6 +9,10 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#include <string>
+#include <vector>
+
+#include "rocksdb/utilities/backup_engine.h"
 
 namespace RocksServer 
 {
@@ -21,7 +25,7 @@ namespace RocksServer
          * Constructor
          * @param   location of DB backup
          */
-        BackupEngine(const rocksdb::BackupableDBOptions& options)
+        BackupEngine(const rocksdb::BackupEngineOptions& options)
         {
             _status = rocksdb::BackupEngine::Open(
                 rocksdb::Env::Default(),
@@ -35,7 +39,7 @@ namespace RocksServer
          * @param   location of DB backup
          */
         BackupEngine(const std::string &bk_path) :
-            BackupEngine( rocksdb::BackupableDBOptions(bk_path) )
+            BackupEngine( rocksdb::BackupEngineOptions(bk_path) )
         {}
 
         virtual ~BackupEngine()

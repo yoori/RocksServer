@@ -7,6 +7,8 @@
  *  @github https://github.com/valmat/rocksserver
  */
 
+#include <cctype>
+
 #include "RocksServer.h"
 
 namespace RocksServer {
@@ -65,9 +67,9 @@ namespace RocksServer {
     void IniConfigs::trim(std::string &str) const
     {
         // trim from start
-        str.erase(str.begin(), std::find_if(str.begin(), str.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+        str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](int ch){ return !std::isspace(ch); }));
         // trim from end
-        str.erase(std::find_if(str.rbegin(), str.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), str.end());
+        str.erase(std::find_if(str.rbegin(), str.rend(), [](int ch){ return !std::isspace(ch); }).base(), str.end());
     }
 
 }

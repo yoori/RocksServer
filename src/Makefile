@@ -8,7 +8,7 @@ OPT_FLAGS=-O4
 
 #compiler flags
 CFLAGS	 = -std=c++17 $(OPT_FLAGS) -pedantic -Wall -Wextra -Wno-unused-parameter -fno-rtti -fno-exceptions -flto=auto
-
+LINK_FLAGS = -static
 
 
 BINFILE  = bin/$(NAME).bin
@@ -62,6 +62,15 @@ bin/obj/EvRequest.rs.o: evhttp/EvRequest.cpp
 
 bin/obj/RocksDBWrapper.rs.o: rocks/RocksDBWrapper.cpp
 	$(CC) rocks/RocksDBWrapper.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/RocksDBWrapper.rs.o
+
+bin/obj/ProtocolInGetIterator.rs.o: rocks/ProtocolInGetIterator.cpp
+	$(CC) rocks/ProtocolInGetIterator.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/ProtocolInGetIterator.rs.o
+
+bin/obj/ProtocolInPostKeysIterator.rs.o: rocks/ProtocolInPostKeysIterator.cpp
+	$(CC) rocks/ProtocolInPostKeysIterator.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/ProtocolInPostKeysIterator.rs.o
+
+bin/obj/ProtocolInPostPairsIterator.rs.o: rocks/ProtocolInPostPairsIterator.cpp
+	$(CC) rocks/ProtocolInPostPairsIterator.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/ProtocolInPostPairsIterator.rs.o
 
 bin/obj/Extend.rs.o: extend/Extend.cpp
 	$(CC) extend/Extend.cpp $(CFLAGS) $(INCLUDES) -c -o bin/obj/Extend.rs.o
@@ -166,7 +175,9 @@ bin/obj/version.rs.o: misc/version.cpp
 
 .PHONY: obj
 obj: RocksServer.h.gch bin/obj/$(NAME).rs.o bin/obj/EvLogger.rs.o bin/obj/EvServer.rs.o \
-bin/obj/EvResponse.rs.o bin/obj/EvRequest.rs.o bin/obj/RocksDBWrapper.rs.o bin/obj/Extend.rs.o \
+bin/obj/EvResponse.rs.o bin/obj/EvRequest.rs.o bin/obj/RocksDBWrapper.rs.o \
+bin/obj/ProtocolInGetIterator.rs.o bin/obj/ProtocolInPostKeysIterator.rs.o bin/obj/ProtocolInPostPairsIterator.rs.o \
+bin/obj/Extend.rs.o \
 bin/obj/PlugContainer.rs.o bin/obj/Extension.rs.o bin/obj/IniConfigs.rs.o bin/obj/IniValue.rs.o \
 bin/obj/RequestKeyExist.rs.o \
 bin/obj/RequestGet.rs.o bin/obj/RequestMget.rs.o bin/obj/RequestIncr.rs.o \
@@ -181,29 +192,28 @@ bin/obj/change_files_limit.rs.o bin/obj/version.rs.o
 
 
 bin/restore.bin: bin/obj/restore.o
-	$(CC) bin/obj/restore.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) -o bin/restore.bin
+	$(CC) bin/obj/restore.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) $(LINK_FLAGS) -o bin/restore.bin
 	strip --strip-all bin/restore.bin
 
 bin/restore_hr.bin: bin/obj/restore_hr.o
-	$(CC) bin/obj/restore_hr.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) -o bin/restore_hr.bin
+	$(CC) bin/obj/restore_hr.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) $(LINK_FLAGS) -o bin/restore_hr.bin
 	strip --strip-all bin/restore_hr.bin
 
 bin/human_readable.bin: bin/obj/human_readable.o
-	$(CC) bin/obj/human_readable.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) -o bin/human_readable.bin
+	$(CC) bin/obj/human_readable.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) $(LINK_FLAGS) -o bin/human_readable.bin
 	strip --strip-all bin/human_readable.bin
 
 bin/human_readable_batches.bin: bin/obj/human_readable_batches.o
-	$(CC) bin/obj/human_readable_batches.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) -o bin/human_readable_batches.bin
+	$(CC) bin/obj/human_readable_batches.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) $(LINK_FLAGS) -o bin/human_readable_batches.bin
 	strip --strip-all bin/human_readable_batches.bin
 
 bin/rows_number.bin: bin/obj/rows_number.o
-	$(CC) bin/obj/rows_number.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) -o bin/rows_number.bin
-	strip --strip-all bin/rows_number.bin
+	$(CC) bin/obj/rows_number.o $(CFLAGS) $(LIBRARIES) $(ROCKSLIB) $(LINK_FLAGS) -o bin/rows_number.bin
 
 
 #dynamic:
 ${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin bin/human_readable_batches.bin bin/rows_number.bin
-	$(CC) bin/obj/*.rs.o $(CFLAGS) -levent -ldl $(LIBRARIES) -L$(LEVENTL) $(ROCKSLIB) -rdynamic -o ${BINFILE}
+	$(CC) bin/obj/*.rs.o $(CFLAGS) -levent -ldl $(LIBRARIES) -L$(LEVENTL) $(ROCKSLIB) $(LINK_FLAGS) -o ${BINFILE}
 	strip --strip-all ${BINFILE}
 	@echo
 	@echo "\033[1;36mBuild complite \033[0m"
@@ -212,7 +222,7 @@ ${BINFILE}: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin bin/hu
 
 .PHONY: static
 static: obj bin/restore.bin bin/restore_hr.bin bin/human_readable.bin bin/human_readable_batches.bin bin/rows_number.bin
-	$(CC) bin/obj/*.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl $(LIBRARIES) $(ROCKSLIB) -rdynamic -o ${BINFILE}
+	$(CC) bin/obj/*.rs.o $(CFLAGS) $(LEVENTL)/libevent.a -ldl $(LIBRARIES) $(ROCKSLIB) $(LINK_FLAGS) -o ${BINFILE}
 	strip --strip-all ${BINFILE}
 	@echo
 	@echo "\033[1;34mBuild complite \033[0m"
