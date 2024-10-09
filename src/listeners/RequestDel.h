@@ -11,7 +11,7 @@
 
 namespace RocksServer {
 
-    class RequestDel : public RequestBase<ProtocolInPost, ProtocolOut>
+    class RequestDel : public RequestBase<ProtocolInGet, ProtocolOut>
     {
     public:
         RequestDel(RocksDBWrapper &rdb) noexcept : db(rdb) {}
@@ -21,7 +21,7 @@ namespace RocksServer {
          *  @param       protocol in object
          *  @param       protocol out object
          */
-        virtual void run(const ProtocolInPost &in, const ProtocolOut &out) noexcept final;
+        virtual void run(const ProtocolInGet &in, const ProtocolOut &out) noexcept final;
 
         virtual ~RequestDel() = default;
     private:
